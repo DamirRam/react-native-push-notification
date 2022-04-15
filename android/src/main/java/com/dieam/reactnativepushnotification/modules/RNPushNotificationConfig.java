@@ -66,11 +66,22 @@ class RNPushNotificationConfig {
         return false;
     }
 
-    public String getNotificationDefaultChannelId() {
+    public String getNotificationDefaultChannelId(Context context) {
         try {
-            return getStringValue(KEY_NOTIFICATION_DEFAULT_CHANNEL_ID,
-              getStringValue(KEY_NOTIFICATION_FIREBASE_DEFAULT_CHANNEL_ID, "fcm_fallback_notification_channel")
-            );
+          String channelId;
+
+          int defaultChannelId = context.getResources().getIdentifier("default_channel_id", "string", context.getPackageName());
+
+          if(defaultChannelId != 0) {
+              channelId = context.getString(defaultChannelId);
+          } else {
+            channelId =  getStringValue(KEY_NOTIFICATION_DEFAULT_CHANNEL_ID,
+                getStringValue(KEY_NOTIFICATION_FIREBASE_DEFAULT_CHANNEL_ID, "fcm_fallback_notification_channel")
+              );
+          }
+
+            return channelId;
+            
         } catch (Exception e) {
             Log.w(RNPushNotification.LOG_TAG, "Unable to find " + KEY_NOTIFICATION_DEFAULT_CHANNEL_ID + " in manifest. Falling back to default");
         }

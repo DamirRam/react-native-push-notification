@@ -55,6 +55,8 @@ dependencies {
     def supportLibMajorVersion = supportLibVersion.split('\\.')[0] as int
     def appCompatLibName =  (supportLibMajorVersion < 20) ? "androidx.appcompat:appcompat" : "com.android.support:appcompat-v7"
 
+    implementation project(path: ':@react-native-firebase_app')
+    implementation project(path: ':@react-native-firebase_messaging')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     implementation "$appCompatLibName:$supportLibVersion"

@@ -273,7 +273,7 @@ public class RNPushNotificationHelper {
             String channel_id = bundle.getString("channelId");
 
             if(channel_id == null) {
-                channel_id = this.config.getNotificationDefaultChannelId();
+                channel_id = this.config.getNotificationDefaultChannelId(context);
             }
             
             NotificationCompat.Builder notification = new NotificationCompat.Builder(context, channel_id)
@@ -943,7 +943,31 @@ public class RNPushNotificationHelper {
 
         return checkOrCreateChannel(manager, channelId, channelName, channelDescription, soundUri, importance, vibratePattern);
     }
-    
+
+    public boolean createDefaultChannel(Context context, String channelId) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            return false;
+
+        String channelName = "";
+        String channelDescription = "";
+
+        NotificationManager manager = notificationManager();
+
+        String packageName = context.getPackageName();
+
+        int defaultChannelName = context.getResources().getIdentifier("default_channel_name", "string", packageName);
+        int defaultChannelDescription = context.getResources().getIdentifier("default_channel_description", "string", packageName);
+
+        if(defaultChannelName != 0) {
+            channelName = context.getString(defaultChannelName);
+        }
+        if(defaultChannelDescription != 0) {
+            channelDescription = context.getString(defaultChannelDescription);
+        }
+
+        return checkOrCreateChannel(manager, channelId, channelName, channelDescription, null, 3, null);
+    }
+
     public boolean isApplicationInForeground() {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<RunningAppProcessInfo> processInfos = activityManager.getRunningAppProcesses();

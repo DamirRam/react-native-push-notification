@@ -23,13 +23,11 @@ public class RNPushNotificationListenerService extends FirebaseMessagingService 
 
     public RNPushNotificationListenerService() {
         super();
-        this.mMessageReceivedHandler = new RNReceivedMessageHandler(this);
     }
 
     public RNPushNotificationListenerService(FirebaseMessagingService delegate) {
         super();
         this.mFirebaseServiceDelegate = delegate;
-        this.mMessageReceivedHandler = new RNReceivedMessageHandler(delegate);
     }
 
     @Override
@@ -74,6 +72,6 @@ public class RNPushNotificationListenerService extends FirebaseMessagingService 
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
-        mMessageReceivedHandler.handleReceivedMessage(message);
+        // messages received to RNPushNotificationFirebaseMessagingReceiver.java
     }
 }
