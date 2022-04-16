@@ -30,6 +30,9 @@ public class RNPushNotificationActions extends BroadcastReceiver {
       }
 
       final Bundle bundle = intent.getBundleExtra("notification");
+      final Bundle pressedButton = intent.getBundleExtra("pressedButton");
+      bundle.putParcelable("pressedButton", pressedButton);
+
       Bundle remoteInput = null;
 
       if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH){
@@ -54,7 +57,7 @@ public class RNPushNotificationActions extends BroadcastReceiver {
         }
       }
 
-      boolean invokeApp = bundle.getBoolean("invokeApp", true);
+      boolean invokeApp = pressedButton.getBoolean("openApp", true);
 
       // Notify the action.
       if(invokeApp) {
