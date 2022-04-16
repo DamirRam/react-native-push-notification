@@ -19,6 +19,8 @@ import static com.dieam.reactnativepushnotification.modules.RNPushNotification.L
 import static com.dieam.reactnativepushnotification.modules.RNPushNotification.KEY_TEXT_REPLY;
 
 public class RNPushNotificationActions extends BroadcastReceiver {
+    private String CLOSE_PUSH = "closePush";
+
     @Override
     public void onReceive(final Context context, Intent intent) {
       String intentActionPrefix = context.getPackageName() + ".ACTION_";
@@ -31,6 +33,7 @@ public class RNPushNotificationActions extends BroadcastReceiver {
 
       final Bundle bundle = intent.getBundleExtra("notification");
       final Bundle pressedButton = intent.getBundleExtra("pressedButton");
+      String buttonAction = pressedButton.getString("action");
       bundle.putParcelable("pressedButton", pressedButton);
 
       Bundle remoteInput = null;
@@ -46,9 +49,9 @@ public class RNPushNotificationActions extends BroadcastReceiver {
       NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
       int notificationID = Integer.parseInt(bundle.getString("id"));
 
-      boolean autoCancel = bundle.getBoolean("autoCancel", true);
+      boolean autoCancel = pressedButton.getBoolean("autoCancel", true);
 
-      if(autoCancel) {
+      if(autoCancel || buttonAction.equals(CLOSE_PUSH)) {
         if (bundle.containsKey("tag")) {
             String tag = bundle.getString("tag");
             manager.cancel(tag, notificationID);
@@ -56,8 +59,12 @@ public class RNPushNotificationActions extends BroadcastReceiver {
             manager.cancel(notificationID);
         }
       }
-
+      
       boolean invokeApp = pressedButton.getBoolean("openApp", true);
+
+      if(buttonAction.equals(CLOSE_PUSH)) {
+          invokeApp = false;
+      }
 
       // Notify the action.
       if(invokeApp) {
