@@ -34,7 +34,6 @@ public class RNPushNotificationActions extends BroadcastReceiver {
       final Bundle bundle = intent.getBundleExtra("notification");
       final Bundle pressedButton = intent.getBundleExtra("pressedButton");
       String buttonAction = pressedButton.getString("action");
-      bundle.putParcelable("pressedButton", pressedButton);
 
       Bundle remoteInput = null;
 
@@ -60,7 +59,7 @@ public class RNPushNotificationActions extends BroadcastReceiver {
         }
       }
       
-      boolean invokeApp = pressedButton.getBoolean("openApp", true);
+      boolean invokeApp = pressedButton.containsKey("backgroundAction") ? false : true ;
 
       if(buttonAction.equals(CLOSE_PUSH)) {
           invokeApp = false;
