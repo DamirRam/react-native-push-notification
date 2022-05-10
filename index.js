@@ -29,7 +29,7 @@ const Notifications = {
 Notifications.callNative = function(name, params) {
   if ( typeof this.handler[name] === 'function' ) {
     if ( typeof params !== 'array' &&
-       typeof params !== 'object' ) {
+      typeof params !== 'object' ) {
       params = [];
     }
 
@@ -40,15 +40,15 @@ Notifications.callNative = function(name, params) {
 };
 
 /**
- * Configure local and remote notifications
- * @param {Object}    options
- * @param {function}  options.onRegister - Fired when the user registers for remote notifications.
- * @param {function}  options.onNotification - Fired when a remote notification is received.
- * @param {function}  options.onAction - Fired when a remote notification is received.
- * @param {function}  options.onRegistrationError - Fired when the user fails to register for remote notifications.
- * @param {Object}    options.permissions - Permissions list
- * @param {Boolean}   options.requestPermissions - Check permissions when register
- */
+* Configure local and remote notifications
+* @param {Object}    options
+* @param {function}  options.onRegister - Fired when the user registers for remote notifications.
+* @param {function}  options.onNotification - Fired when a remote notification is received.
+* @param {function}  options.onAction - Fired when a remote notification is received.
+* @param {function}  options.onRegistrationError - Fired when the user fails to register for remote notifications.
+* @param {Object}    options.permissions - Permissions list
+* @param {Boolean}   options.requestPermissions - Check permissions when register
+*/
 Notifications.configure = function(options) {
   if ( typeof options.onRegister !== 'undefined' ) {
     this.onRegister = options.onRegister;
@@ -133,13 +133,13 @@ Notifications.unregister = function() {
 };
 
 /**
- * Local Notifications
- * @param {Object}    details
- * @param {String}    details.title  -  The title displayed in the notification alert.
- * @param {String}    details.message - The message displayed in the notification alert.
- * @param {String}    details.ticker -  ANDROID ONLY: The ticker displayed in the status bar.
- * @param {Object}    details.userInfo -  iOS ONLY: The userInfo used in the notification alert.
- */
+* Local Notifications
+* @param {Object}    details
+* @param {String}    details.title  -  The title displayed in the notification alert.
+* @param {String}    details.message - The message displayed in the notification alert.
+* @param {String}    details.ticker -  ANDROID ONLY: The ticker displayed in the status bar.
+* @param {Object}    details.userInfo -  iOS ONLY: The userInfo used in the notification alert.
+*/
 Notifications.localNotification = function({...details}) {
   if ('android' === Platform.OS && details && !details.channelId) {
     console.warn('No channel id passed, notifications may not work.');
@@ -220,10 +220,10 @@ Notifications.localNotification = function({...details}) {
 };
 
 /**
- * Local Notifications Schedule
- * @param {Object}    details (same as localNotification)
- * @param {Date}    details.date - The date and time when the system should deliver the notification
- */
+* Local Notifications Schedule
+* @param {Object}    details (same as localNotification)
+* @param {Date}    details.date - The date and time when the system should deliver the notification
+*/
 Notifications.localNotificationSchedule = function({...details}) {
   if ('android' === Platform.os && details && !details.channelId) {
     console.warn('No channel id passed, notifications may not work.');
@@ -382,6 +382,7 @@ Notifications._transformNotificationObject = function(data, isFromBackground = n
       soundName: data.getSound(),
       fireDate: Date.parse(data._fireDate),
       action: data.getActionIdentifier(),
+      actionValue: data.getActionValue(),
       reply_text: data.getUserText(),
       finish: (res) => data.finish(res)
     };
@@ -421,6 +422,10 @@ Notifications._transformNotificationObject = function(data, isFromBackground = n
 
     delete _notification.userInfo;
     delete _notification.notificationId;
+  }
+
+  if (_notification?.data?.hasOwnProperty('actions') && typeof _notification?.data?.actions === 'string') {
+    _notification.data.actions = JSON.parse(_notification.data.actions);
   }
 
   return _notification;
@@ -556,43 +561,43 @@ Notifications.getDeliveredNotifications = function() {
 }
 
 Notifications.getScheduledLocalNotifications = function(callback) {
-	const mapNotifications = (notifications) => {
-		let mappedNotifications = [];
-		if(notifications?.length > 0) {
-			if(Platform.OS === 'ios'){
-				mappedNotifications = notifications.map(notif => {
-					return ({
-						soundName: notif?.sound,
-						id: notif.id,
+  const mapNotifications = (notifications) => {
+    let mappedNotifications = [];
+    if(notifications?.length > 0) {
+      if(Platform.OS === 'ios'){
+        mappedNotifications = notifications.map(notif => {
+          return ({
+            soundName: notif?.sound,
+            id: notif.id,
                         date: (notif.date ? new Date(notif.date) : null),
-						number: notif?.badge,
-						message: notif?.body,
+            number: notif?.badge,
+            message: notif?.body,
             title: notif?.title,
             data: notif?.userInfo
-					})
-				})
-			} else if(Platform.OS === 'android') {
-				mappedNotifications = notifications.map(notif => {
+          })
+        })
+      } else if(Platform.OS === 'android') {
+        mappedNotifications = notifications.map(notif => {
 
           try {
             notif.data = JSON.parse(notif.data);
           } catch(e) { }
 
-					return ({
-						soundName: notif.soundName,
-						repeatInterval: notif.repeatInterval,
-						id: notif.id,
-						date: new Date(notif.date),
-						number: notif.number,
-						message: notif.message,
-						title: notif.title,
-						data: notif.data,
-					})
-				})
-			}
-		}
-		callback(mappedNotifications);
-	}
+          return ({
+            soundName: notif.soundName,
+            repeatInterval: notif.repeatInterval,
+            id: notif.id,
+            date: new Date(notif.date),
+            number: notif.number,
+            message: notif.message,
+            title: notif.title,
+            data: notif.data,
+          })
+        })
+      }
+    }
+    callback(mappedNotifications);
+  }
 
   if(Platform.OS === 'ios'){
     return this.callNative('getPendingNotificationRequests', [mapNotifications]);
