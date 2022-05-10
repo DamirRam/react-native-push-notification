@@ -516,12 +516,17 @@ public class RNPushNotificationHelper {
                 // Add button for each actions.
                 for (int i = 0; i < actionsArray.length(); i++) {
                     String action;
+                    String actionValue = "null";
                     String buttonTitle;
                     JSONObject actionButton;
                     try {
                         actionButton = actionsArray.getJSONObject(i);
                         action = actionButton.getString("action");
                         buttonTitle = actionButton.getString("title");
+
+                        if(actionButton.has("value")) {
+                          actionValue = actionButton.getString("value");
+                        }
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, "Exception while getting actionButton from actionsArray.", e);
                         continue;
@@ -535,6 +540,7 @@ public class RNPushNotificationHelper {
 
                     // Add "action" for later identifying which button gets pressed.
                     bundle.putString("action", action);
+                    bundle.putString("actionValue", actionValue);
                     actionIntent.putExtra("notification", bundle);
                     actionIntent.putExtra("pressedButton", jsonToBundle(actionButton));
                     actionIntent.setPackage(packageName);
