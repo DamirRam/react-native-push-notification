@@ -39,7 +39,7 @@ public class RNPushNotificationAttributes {
     private static final String PLAY_SOUND = "playSound";
     private static final String VIBRATE = "vibrate";
     private static final String VIBRATION = "vibration";
-    private static final String ACTIONS = "actions";
+    private static final String BUTTONS = "buttons";
     private static final String INVOKE_APP = "invokeApp";
     private static final String TAG = "tag";
     private static final String REPEAT_TYPE = "repeatType";
@@ -79,7 +79,7 @@ public class RNPushNotificationAttributes {
     private final boolean playSound;
     private final boolean vibrate;
     private final double vibration;
-    private final String actions;
+    private final String buttons;
     private final boolean invokeApp;
     private final String tag;
     private final String repeatType;
@@ -120,7 +120,7 @@ public class RNPushNotificationAttributes {
         playSound = bundle.getBoolean(PLAY_SOUND);
         vibrate = bundle.getBoolean(VIBRATE);
         vibration = bundle.getDouble(VIBRATION);
-        actions = bundle.getString(ACTIONS);
+        buttons = bundle.getString(BUTTONS);
         invokeApp = bundle.getBoolean(INVOKE_APP);
         tag = bundle.getString(TAG);
         repeatType = bundle.getString(REPEAT_TYPE);
@@ -163,7 +163,7 @@ public class RNPushNotificationAttributes {
             playSound = jsonObject.has(PLAY_SOUND) ? jsonObject.getBoolean(PLAY_SOUND) : true;
             vibrate = jsonObject.has(VIBRATE) ? jsonObject.getBoolean(VIBRATE) : true;
             vibration = jsonObject.has(VIBRATION) ? jsonObject.getDouble(VIBRATION) : 1000;
-            actions = jsonObject.has(ACTIONS) ? jsonObject.getString(ACTIONS) : null;
+            buttons = jsonObject.has(BUTTONS) ? jsonObject.getString(BUTTONS) : null;
             invokeApp = jsonObject.has(INVOKE_APP) ? jsonObject.getBoolean(INVOKE_APP) : true;
             tag = jsonObject.has(TAG) ? jsonObject.getString(TAG) : null;
             repeatType = jsonObject.has(REPEAT_TYPE) ? jsonObject.getString(REPEAT_TYPE) : null;
@@ -216,7 +216,7 @@ public class RNPushNotificationAttributes {
         bundle.putBoolean(PLAY_SOUND, playSound);
         bundle.putBoolean(VIBRATE, vibrate);
         bundle.putDouble(VIBRATION, vibration);
-        bundle.putString(ACTIONS, actions);
+        bundle.putString(BUTTONS, buttons);
         bundle.putBoolean(INVOKE_APP, invokeApp);
         bundle.putString(TAG, tag);
         bundle.putString(REPEAT_TYPE, repeatType);
@@ -261,7 +261,7 @@ public class RNPushNotificationAttributes {
             jsonObject.put(PLAY_SOUND, playSound);
             jsonObject.put(VIBRATE, vibrate);
             jsonObject.put(VIBRATION, vibration);
-            jsonObject.put(ACTIONS, actions);
+            jsonObject.put(BUTTONS, buttons);
             jsonObject.put(INVOKE_APP, invokeApp);
             jsonObject.put(TAG, tag);
             jsonObject.put(REPEAT_TYPE, repeatType);
@@ -312,7 +312,7 @@ public class RNPushNotificationAttributes {
                 ", playSound=" + playSound +
                 ", vibrate=" + vibrate +
                 ", vibration=" + vibration +
-                ", actions='" + actions + '\'' +
+                ", buttons='" + buttons + '\'' +
                 ", invokeApp=" + invokeApp +
                 ", tag='" + tag + '\'' +
                 ", repeatType='" + repeatType + '\'' +

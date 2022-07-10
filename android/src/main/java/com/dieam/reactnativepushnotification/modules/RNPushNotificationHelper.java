@@ -504,9 +504,9 @@ public class RNPushNotificationHelper {
 
             JSONArray actionsArray = null;
             try {
-                actionsArray = dataBundle.getString("actions") != null ? new JSONArray(dataBundle.getString("actions")) : null;
+                actionsArray = dataBundle.getString("buttons") != null ? new JSONArray(dataBundle.getString("buttons")) : null;
             } catch (JSONException e) {
-                Log.e(LOG_TAG, "Exception while converting actions to JSON object.", e);
+                Log.e(LOG_TAG, "Exception while converting buttons to JSON object.", e);
             }
 
             if (actionsArray != null) {

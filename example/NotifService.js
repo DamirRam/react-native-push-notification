@@ -85,7 +85,7 @@ export default class NotifService {
       group: 'group', // (optional) add group to message
       groupSummary: false, // (optional) set this notification to be the group summary for a group of notifications, default: false
       ongoing: false, // (optional) set whether this is an "ongoing" notification
-      actions: ['Yes', 'No'], // (Android only) See the doc for notification actions to know more
+      buttons: ['Yes', 'No'], // (Android only) See the doc for notification actions to know more
       invokeApp: true, // (optional) This enable click on actions to bring back the application to foreground or stay in background, default: true
 
       when: null, // (optionnal) Add a timestamp pertaining to the notification (usually the time the event occurred). For apps targeting Build.VERSION_CODES.N and above, this time is not shown anymore by default and must be opted into by using `showWhen`, default: null.
@@ -127,7 +127,7 @@ export default class NotifService {
       group: 'group', // (optional) add group to message
       groupSummary: false, // (optional) set this notification to be the group summary for a group of notifications, default: false
       ongoing: false, // (optional) set whether this is an "ongoing" notification
-      actions: ['Yes', 'No'], // (Android only) See the doc for notification actions to know more
+      buttons: ['Yes', 'No'], // (Android only) See the doc for notification actions to know more
       invokeApp: false, // (optional) This enable click on actions to bring back the application to foreground or stay in background, default: true
 
       when: null, // (optionnal) Add a timestamp pertaining to the notification (usually the time the event occurred). For apps targeting Build.VERSION_CODES.N and above, this time is not shown anymore by default and must be opted into by using `showWhen`, default: null.

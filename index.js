@@ -203,8 +203,8 @@ Notifications.localNotification = function({...details}) {
       }
     }
 
-    if(details && Array.isArray(details.actions)) {
-      details.actions = JSON.stringify(details.actions);
+    if(details && Array.isArray(details.buttons)) {
+      details.buttons = JSON.stringify(details.buttons);
     }
 
     if(details.userInfo) {
@@ -299,8 +299,8 @@ Notifications.localNotificationSchedule = function({...details}) {
       }
     }
   
-    if(details && Array.isArray(details.actions)) {
-      details.actions = JSON.stringify(details.actions);
+    if(details && Array.isArray(details.buttons)) {
+      details.buttons = JSON.stringify(details.buttons);
     }
 
     if(details.userInfo) {
@@ -424,8 +424,8 @@ Notifications._transformNotificationObject = function(data, isFromBackground = n
     delete _notification.notificationId;
   }
 
-  if (_notification?.data?.hasOwnProperty('actions') && typeof _notification?.data?.actions === 'string') {
-    _notification.data.actions = JSON.parse(_notification.data.actions);
+  if (_notification?.data?.hasOwnProperty('buttons') && typeof _notification?.data?.buttons === 'string') {
+    _notification.data.buttons = JSON.parse(_notification.data.buttons);
   }
 
   return _notification;
