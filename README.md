@@ -343,7 +343,7 @@ PushNotification.localNotification({
 
   messageId: "google:message_id", // (optional) added as `message_id` to intent extras so opening push notification can find data stored by @react-native-firebase/messaging module. 
 
-  actions: ["Yes", "No"], // (Android only) See the doc for notification actions to know more
+  buttons: [{title: 'title', action: 'action'}], // (Android only) See the doc for notification actions to know more
   invokeApp: true, // (optional) This enable click on actions to bring back the application to foreground or stay in background, default: true
 
   /* iOS only properties */
@@ -685,13 +685,16 @@ PushNotification.localNotificationSchedule({
 });
 ```
 
-## Notification Actions
+## Notification Buttons
 
 (Android Only)
 
-This is done by specifying an `actions` parameters while configuring the local notification. This is an array of strings where each string is a notification action that will be presented with the notification.
+This is done by specifying an `buttons` parameters while configuring the local notification. This is an array of strings where each string is a notification action that will be presented with the notification.
 
-For e.g. `actions: ['Accept', 'Reject']`
+For e.g. `buttons: [{'title': 'Button title', 'action': 'Button action', 'value': 'custom value for action', 'backgroundAction': ''}]`
+
+backgroundAction if this parameter is present, the button click will be processed in the background 
+(the button click don't processed when app is killed)
 
 When you handle actions in background (`invokeApp: false`), you can open the application and pass the initial notification by using use `PushNotification.invokeApp(notification)`.
 
@@ -710,7 +713,7 @@ EXAMPLE:
 PushNotification.localNotificationSchedule({
   message: "My Notification Message", // (required)
   date: new Date(Date.now() + (60 * 1000)), // in 60 secs
-  actions: ["ReplyInput"],
+  buttons: [{title: 'title', action: 'action'}],
   reply_placeholder_text: "Write your response...", // (required)
   reply_button_text: "Reply" // (required)
 });
