@@ -41,11 +41,10 @@ public class RNPushNotificationFirebaseMessagingReceiver extends BroadcastReceiv
     RemoteMessage remoteMessage = new RemoteMessage(intent.getExtras());
     RemoteMessage.Notification remoteNotification = remoteMessage.getNotification();
 
-    mMessageReceivedHandler.handleReceivedMessage(remoteMessage, context);
-
     if (intent.getAction().equals(RECEIVE) && remoteNotification != null) {
       abortBroadcast();
 
+      mMessageReceivedHandler.handleReceivedMessage(remoteMessage, context);
     //---------------------------------------
       //@react-native-firebase-messaging code start
 
