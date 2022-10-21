@@ -503,11 +503,12 @@ public class RNPushNotificationHelper {
             Bundle dataBundle = bundle.getParcelable("data") != null ? bundle.getParcelable("data") : bundle;
 
             JSONArray actionsArray = null;
-            try {
-                actionsArray = dataBundle.getString("buttons") != null ? new JSONArray(dataBundle.getString("buttons")) : null;
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, "Exception while converting buttons to JSON object.", e);
-            }
+            // временно отключил добавление кнопок в пуш уведомление
+            // try {
+            //     actionsArray = dataBundle.getString("buttons") != null ? new JSONArray(dataBundle.getString("buttons")) : null;
+            // } catch (JSONException e) {
+            //     Log.e(LOG_TAG, "Exception while converting buttons to JSON object.", e);
+            // }
 
             if (actionsArray != null) {
                 // No icon for now. The icon value of 0 shows no icon.
