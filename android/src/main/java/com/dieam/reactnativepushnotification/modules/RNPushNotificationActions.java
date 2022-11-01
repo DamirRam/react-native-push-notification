@@ -17,9 +17,9 @@ import androidx.core.app.RemoteInput;
 
 import static com.dieam.reactnativepushnotification.modules.RNPushNotification.LOG_TAG;
 import static com.dieam.reactnativepushnotification.modules.RNPushNotification.KEY_TEXT_REPLY;
+import static com.dieam.reactnativepushnotification.modules.RNPushNotification.CLOSE_PUSH;
 
 public class RNPushNotificationActions extends BroadcastReceiver {
-    private String CLOSE_PUSH = "closePush";
 
     @Override
     public void onReceive(final Context context, Intent intent) {

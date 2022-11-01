@@ -50,6 +50,7 @@ import java.util.Map;
 import static com.dieam.reactnativepushnotification.modules.RNPushNotification.LOG_TAG;
 import static com.dieam.reactnativepushnotification.modules.RNPushNotificationAttributes.fromJson;
 import static com.dieam.reactnativepushnotification.modules.RNPushNotification.KEY_TEXT_REPLY;
+import static com.dieam.reactnativepushnotification.modules.RNPushNotification.CLOSE_PUSH;
 
 public class RNPushNotificationHelper {
     public static final String PREFERENCES_KEY = "rn_push_notification";
@@ -532,8 +533,14 @@ public class RNPushNotificationHelper {
                         continue;
                     }
 
+                    Intent actionIntent = null;
 
-                    Intent actionIntent = new Intent(context, RNPushNotificationActions.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !action.equals(CLOSE_PUSH)) {
+                        actionIntent = new Intent(context, intentClass);
+                    } else {
+                        actionIntent = new Intent(context, RNPushNotificationActions.class);
+                    }
+
                     actionIntent.setAction(packageName + ".ACTION_" + i);
 
                     actionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -548,9 +555,15 @@ public class RNPushNotificationHelper {
                         intent.putExtra("message_id", messageId);
                     }
 
+                    PendingIntent pendingActionIntent = null;
+
                     int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
 
-                    PendingIntent pendingActionIntent = PendingIntent.getBroadcast(context, notificationID, actionIntent, flags);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !action.equals(CLOSE_PUSH)) {
+                        pendingActionIntent = PendingIntent.getActivity(context, notificationID, actionIntent, flags);
+                    } else {
+                        pendingActionIntent = PendingIntent.getBroadcast(context, notificationID, actionIntent, flags);
+                    }
 
                     if(action.equals("replyInput")){
                         //Action with inline reply

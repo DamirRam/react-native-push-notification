@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
@@ -41,6 +42,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 public class RNPushNotification extends ReactContextBaseJavaModule implements ActivityEventListener {
     public static final String LOG_TAG = "RNPushNotification";// all logging should use this tag
     public static final String KEY_TEXT_REPLY = "key_text_reply";
+    public static final String CLOSE_PUSH = "closePush";
 
     public interface RNIntentHandler {
         void onNewIntent(Intent intent);
@@ -80,6 +82,26 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
         return constants;
     }
 
+    private void hideNotificationIfNeeded(Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            intent.hasExtra("notification") &&
+            intent.hasExtra("pressedButton")
+            ) {
+            Bundle notification = intent.getBundleExtra("notification");
+            Bundle pressedButton = intent.getBundleExtra("pressedButton");
+
+            boolean autoCancel = pressedButton.getBoolean("autoCancel", true);
+            int notificationID = Integer.parseInt(notification.getString("id"));
+
+            if (autoCancel && notification.containsKey("tag")) {
+                String tag = notification.getString("tag");
+                mRNPushNotificationHelper.clearNotification(tag, notificationID);
+            } else if (autoCancel) {
+                mRNPushNotificationHelper.clearNotification(null, notificationID);
+            }
+        }
+    }
+
     private Bundle getBundleFromIntent(Intent intent) {
         Bundle bundle = null;
         if (intent.hasExtra("notification")) {
@@ -108,8 +130,10 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
         for (RNIntentHandler handler : IntentHandlers) {
             handler.onNewIntent(intent);
         }
-        
+
+        this.hideNotificationIfNeeded(intent);
         Bundle bundle = this.getBundleFromIntent(intent);
+
         if (bundle != null) {
             mJsDelivery.notifyNotification(bundle);
         }
@@ -188,6 +212,7 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
         WritableMap params = Arguments.createMap();
         Activity activity = getCurrentActivity();
         if (activity != null) {
+            this.hideNotificationIfNeeded(activity.getIntent());
             Bundle bundle = this.getBundleFromIntent(activity.getIntent());
             if (bundle != null) {
                 bundle.putBoolean("foreground", false);
