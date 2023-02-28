@@ -1,6 +1,7 @@
 package com.dieam.reactnativepushnotification.modules;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.MessagingAnalytics;
 import com.google.firebase.messaging.RemoteMessage;
 
 import android.content.Intent;
