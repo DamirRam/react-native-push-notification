@@ -2,6 +2,7 @@ package com.dieam.reactnativepushnotification.modules;
 
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableNativeMap;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import android.app.Application;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.content.Context;
 import android.util.Log;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import java.util.Map;
@@ -18,7 +21,13 @@ import static com.dieam.reactnativepushnotification.modules.RNPushNotification.L
 
 public class RNReceivedMessageHandler {
 
-    public void handleReceivedMessage(RemoteMessage message, Context context) {
+    private FirebaseMessagingService mFirebaseMessagingService;
+
+    public RNReceivedMessageHandler(@NonNull FirebaseMessagingService service) {
+        this.mFirebaseMessagingService = service;
+    }
+
+    public void handleReceivedMessage(RemoteMessage message) {
         String from = message.getFrom();
         RemoteMessage.Notification remoteNotification = message.getNotification();
         final Bundle bundle = new Bundle();
@@ -26,10 +35,10 @@ public class RNReceivedMessageHandler {
         // data has it
         if (remoteNotification != null) {
             // ^ It's null when message is from GCM
-            RNPushNotificationConfig config = new RNPushNotificationConfig(context);
+            RNPushNotificationConfig config = new RNPushNotificationConfig(mFirebaseMessagingService.getApplication());
 
-            String title = getLocalizedString(remoteNotification.getTitle(), remoteNotification.getTitleLocalizationKey(), remoteNotification.getTitleLocalizationArgs(), context);
-            String body = getLocalizedString(remoteNotification.getBody(), remoteNotification.getBodyLocalizationKey(), remoteNotification.getBodyLocalizationArgs(), context);
+            String title = getLocalizedString(remoteNotification.getTitle(), remoteNotification.getTitleLocalizationKey(), remoteNotification.getTitleLocalizationArgs(), mFirebaseMessagingService.getApplication());
+            String body = getLocalizedString(remoteNotification.getBody(), remoteNotification.getBodyLocalizationKey(), remoteNotification.getBodyLocalizationArgs(), mFirebaseMessagingService.getApplication());
 
             bundle.putString("title", title);
             bundle.putString("message", body);
@@ -47,7 +56,7 @@ public class RNReceivedMessageHandler {
               bundle.putString("channelId", remoteNotification.getChannelId());
             }
             else {
-              bundle.putString("channelId", config.getNotificationDefaultChannelId(context));
+              bundle.putString("channelId", config.getNotificationDefaultChannelId(mFirebaseMessagingService.getApplication()));
             }
 
             Integer visibilty = remoteNotification.getVisibility();
@@ -109,7 +118,7 @@ public class RNReceivedMessageHandler {
 
         Log.v(LOG_TAG, "onMessageReceived: " + bundle);
 
-        handleRemotePushNotification(context, bundle);
+        handleRemotePushNotification(mFirebaseMessagingService.getApplication(), bundle);
     }
 
     private void handleRemotePushNotification(Context context, Bundle bundle) {
