@@ -914,39 +914,44 @@ public class RNPushNotificationHelper {
         if (manager == null)
             return false;
 
-        NotificationChannel channel = manager.getNotificationChannel(channel_id);
+        try {
+            NotificationChannel channel = manager.getNotificationChannel(channel_id);
 
-        if (
-                channel == null && channel_name != null && channel_description != null ||
-                        channel != null &&
-                                (
-                                        channel_name != null && !channel_name.equals(channel.getName()) ||
-                                                channel_description != null && !channel_description.equals(channel.getDescription())
-                                )
-        ) {
-            // If channel doesn't exist create a new one.
-            // If channel name or description is updated then update the existing channel.
-            channel = new NotificationChannel(channel_id, channel_name, importance);
+            if (
+                    channel == null && channel_name != null && channel_description != null ||
+                            channel != null &&
+                                    (
+                                            channel_name != null && !channel_name.equals(channel.getName()) ||
+                                                    channel_description != null && !channel_description.equals(channel.getDescription())
+                                    )
+            ) {
+                // If channel doesn't exist create a new one.
+                // If channel name or description is updated then update the existing channel.
+                channel = new NotificationChannel(channel_id, channel_name, importance);
 
-            channel.setDescription(channel_description);
-            channel.enableLights(true);
-            channel.enableVibration(vibratePattern != null);
-            channel.setVibrationPattern(vibratePattern);
+                channel.setDescription(channel_description);
+                channel.enableLights(true);
+                channel.enableVibration(vibratePattern != null);
+                channel.setVibrationPattern(vibratePattern);
 
-            if (soundUri != null) {
-                AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                        .build();
+                if (soundUri != null) {
+                    AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                            .build();
 
-                channel.setSound(soundUri, audioAttributes);
-            } else {
-                channel.setSound(null, null);
-            }
+                    channel.setSound(soundUri, audioAttributes);
+                } else {
+                    channel.setSound(null, null);
+                }
+                    
+                    manager.createNotificationChannel(channel);
 
-            manager.createNotificationChannel(channel);
 
-            return true;
+                    return true;
+                }
+        } catch (NullPointerException e) {
+          e.printStackTrace();
         }
 
         return false;
