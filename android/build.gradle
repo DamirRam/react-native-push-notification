@@ -57,6 +57,7 @@ dependencies {
 
     implementation project(path: ':@react-native-firebase_app')
     implementation project(path: ':@react-native-firebase_messaging')
+    implementation project(path: ':react-native-appmetrica-next')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     implementation "$appCompatLibName:$supportLibVersion"

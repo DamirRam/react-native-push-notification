@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "@react-native-firebase/app": "9.0.0",
-    "@react-native-firebase/messaging": "8.0.0"
+    "@react-native-firebase/messaging": "8.0.0",
+    "react-native-appmetrica-next": "2.0.0"
   },
   "peerDependencies": {
     "@react-native-community/push-notification-ios": "^1.10.1",

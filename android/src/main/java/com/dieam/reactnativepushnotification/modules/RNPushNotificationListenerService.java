@@ -1,9 +1,5 @@
 package com.dieam.reactnativepushnotification.modules;
 
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.MessagingAnalytics;
-import com.google.firebase.messaging.RemoteMessage;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +13,10 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.MessagingAnalytics;
+import com.google.firebase.messaging.RemoteMessage;
+import com.yandex.metrica.plugin.reactnative.AppMetricaMessagingMethods;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -27,17 +27,20 @@ public class RNPushNotificationListenerService extends FirebaseMessagingService 
 
     private RNReceivedMessageHandler mMessageReceivedHandler;
     private FirebaseMessagingService mFirebaseServiceDelegate;
+    private AppMetricaMessagingMethods mAppMetricaMessagingMethods;
     private static final Queue<String> recentlyReceivedMessageIds = new ArrayDeque(10);
 
     public RNPushNotificationListenerService() {
         super();
         this.mMessageReceivedHandler = new RNReceivedMessageHandler(this);
+        this.mAppMetricaMessagingMethods = new AppMetricaMessagingMethods(this);
     }
 
     public RNPushNotificationListenerService(FirebaseMessagingService delegate) {
         super();
         this.mFirebaseServiceDelegate = delegate;
         this.mMessageReceivedHandler = new RNReceivedMessageHandler(delegate);
+        this.mAppMetricaMessagingMethods = new AppMetricaMessagingMethods(delegate);
     }
 
     @Override
@@ -70,6 +73,8 @@ public class RNPushNotificationListenerService extends FirebaseMessagingService 
                 }
             }
         });
+
+        mAppMetricaMessagingMethods.onNewToken(token);
     }
 
     private void handleNewToken(ReactApplicationContext context, String token) {
@@ -117,7 +122,10 @@ public class RNPushNotificationListenerService extends FirebaseMessagingService 
 
           if(data != null) {
             data.remove("androidx.content.wakelockid");
-            mMessageReceivedHandler.handleReceivedMessage(new RemoteMessage(data));
+            RemoteMessage message = new RemoteMessage(data);
+
+            mMessageReceivedHandler.handleReceivedMessage(message);
+            mAppMetricaMessagingMethods.onMessageReceived(message);
           }
         }
     }
