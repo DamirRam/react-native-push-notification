@@ -25,12 +25,12 @@
   },
   "dependencies": {
     "@react-native-firebase/app": "9.0.0",
-    "@react-native-firebase/messaging": "8.0.0",
-    "react-native-appmetrica-next": "2.0.0"
+    "@react-native-firebase/messaging": "8.0.0"
   },
   "peerDependencies": {
     "@react-native-community/push-notification-ios": "^1.10.1",
-    "react-native": ">=0.33"
+    "react-native": ">=0.33",
+    "react-native-appmetrica-next": "@git+https://github.com/DamirRam/react-native-appmetrica-next.git#master"
   },
   "author": "zo0r <http://zo0r.me>",
   "license": "MIT"
